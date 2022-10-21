@@ -26,6 +26,7 @@ class ContactManagerTest {
     }
     @Test
     @DisplayName("Should create contact")
+    @Disabled
     @EnabledOnOs(value =  OS.MAC,disabledReason = "Should run only on MAC!")
     public void shouldCreateContact(){
 
@@ -86,27 +87,19 @@ class ContactManagerTest {
 //        assertFalse(contactManager.getAllContacts().isEmpty());
 //        assertEquals(1, contactManager.getAllContacts().size());
 //    }
+    @Nested
+    class ParameterizedTests{
+    @DisplayName("Phone Number should match the required Format")
+    @ParameterizedTest
+    @ValueSource(strings = {"0988885456", "988885456", "+0988885456"})
+    public void shouldTestPhoneNumberFormat(String phoneNumber) {
+        contactManager.addContact("John", "Doe", phoneNumber);
+        assertFalse(contactManager.getAllContacts().isEmpty());
+        assertEquals(1, contactManager.getAllContacts().size());
+    }
 
-//    @DisplayName("Phone Number should match the required Format")
-//    @ParameterizedTest
-//    @ValueSource(strings = {"0988885456", "988885456", "+0988885456"})
-//    public void shouldTestPhoneNumberFormat(String phoneNumber) {
-//        contactManager.addContact("John", "Doe", phoneNumber);
-//        assertFalse(contactManager.getAllContacts().isEmpty());
-//        assertEquals(1, contactManager.getAllContacts().size());
-//    }
-//    @DisplayName("Method Source Case - Phone Number should match the required Format")
-//    @ParameterizedTest
-//    @MethodSource("phoneNumberList")
-//    public void shouldTestPhoneNumberFormatUsingMethodSource(String phoneNumber) {
-//        contactManager.addContact("John", "Doe", phoneNumber);
-//        assertFalse(contactManager.getAllContacts().isEmpty());
-//        assertEquals(1, contactManager.getAllContacts().size());
-//    }
-//
-//    private static List<String> phoneNumberList() {
-//        return Arrays.asList("0123456789", "01234567890", "0123456789");
-//    }
+
+
     @DisplayName("CSV Source Case - Phone Number should match the required Format")
     @ParameterizedTest
     @CsvSource({"0123456789", "2,1234567890","3,+0123456789"})
@@ -114,6 +107,18 @@ class ContactManagerTest {
         contactManager.addContact("John", "Doe", phoneNumber);
         assertFalse(contactManager.getAllContacts().isEmpty());
         assertEquals(1, contactManager.getAllContacts().size());
+    }
+}
+    @DisplayName("Method Source Case - Phone Number should match the required Format")
+    @ParameterizedTest
+    @MethodSource("phoneNumberList")
+    public void shouldTestPhoneNumberFormatUsingMethodSource(String phoneNumber) {
+        contactManager.addContact("John", "Doe", phoneNumber);
+        assertFalse(contactManager.getAllContacts().isEmpty());
+        assertEquals(1, contactManager.getAllContacts().size());
+    }
+    private static List<String> phoneNumberList() {
+        return Arrays.asList("0123456789", "01234567890", "0123456789");
     }
     @AfterEach
     public void tearDown() {
